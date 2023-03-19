@@ -67,7 +67,9 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         
         let show = UNNotificationAction(identifier: "show", title: "show me more", options: .foreground)
-        let category = UNNotificationCategory(identifier: "alarm", actions: [show], intentIdentifiers: [])
+        let remindMeLater = UNNotificationAction(identifier: "remindLater", title: "Remind me later", options: .foreground)
+            
+        let category = UNNotificationCategory(identifier: "alarm", actions: [show, remindMeLater], intentIdentifiers: [])
         
         
         center.setNotificationCategories([category])
@@ -88,6 +90,22 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 
             case "show":
                 print("show more information")
+                let alertController = UIAlertController(title: "More Information", message: "Here is some more information about the notification.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                print("OK tapped")
+                }
+                alertController.addAction(okAction)
+                present(alertController, animated: true, completion: nil)
+            case "remindLater":
+                        print("remind me later")
+                let content = response.notification.request.content
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: 86400, repeats: false))
+                                
+                               
+                center.add(request, withCompletionHandler: nil)
+                                
+                        
+            
             default:
                 break
                 
